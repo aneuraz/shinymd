@@ -22,7 +22,6 @@ connection <- shiny.collections::connect(port = rdb_port, db_name=rdb_name)
 
 shinyServer(function(input, output) {
   
-  
   in_db <- shiny.collections::collection(rdb_table, connection)
   
   r(rdb_name,rdb_table)$insert(
