@@ -6,9 +6,10 @@
 #
 
 library(shiny)
+library(shinyAce)
 
-preview_height <- '1200px'
-preview_width <- '700px'
+editor_height <- '800px'
+editor_width <- '100%'
 
 shinyUI(fluidPage(
   fluidRow(
@@ -26,18 +27,13 @@ shinyUI(fluidPage(
     ),
     column(
       width = 5,
-      textAreaInput(
-        label='',
-        inputId = "text",
-        width = preview_width,
-        height= preview_height
-      )
+      aceEditor("rmd", mode="markdown", height = editor_height)
     ),
     column(
       width = 5,
       htmlOutput('preview',
-                 width = preview_width,
-                 height= preview_height)
+                 width = editor_width,
+                 height= editor_height)
     )
   )
 ))

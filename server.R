@@ -1,5 +1,6 @@
 library(shiny)
 library(stringr)
+library(shinyAce)
 shinyServer(function(input, output) {
   
   base_folder <- getwd()
@@ -7,11 +8,11 @@ shinyServer(function(input, output) {
   full_tmp_folder <- paste0(base_folder,'/',relative_tmp_folder)
   tmp_rmd <- paste0(full_tmp_folder,'/torender.Rmd')
   
-  preview_height <- '1200px'
-  preview_width <- '700px'
+  preview_height <- '800px'
+  preview_width <- '100%'
   
   torender <- reactive({
-    require(input$text)
+    require(input$rmd)
     if (!is.null(input$biblio)) {
       add_biblio = str_interp('bibliography: ${biblio}', list(biblio = input$biblio$datapath ))
     } else {
@@ -32,7 +33,7 @@ ${add_biblio}
     
     cat(header, file = tmp_rmd)
     cat('\n\n', file = tmp_rmd, append = T)
-    cat(input$text, file = tmp_rmd, append = T)
+    cat(input$rmd, file = tmp_rmd, append = T)
     
     return(tmp_rmd)
   })
