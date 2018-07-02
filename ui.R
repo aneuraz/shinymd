@@ -15,25 +15,28 @@ shinyUI(fluidPage(
   fluidRow(
     column(
       width = 2,
-      textInput('title',
-                label = 'Title',
-                value = "Your title"),
-      textInput('authors',
-                label = 'Authors',
-                value = "me"),
+      # textInput('title',
+      #           label = 'Title',
+      #           value = "Your title"),
+      # textInput('authors',
+      #           label = 'Authors',
+      #           value = "me"),
       selectInput(choices=list('HTML'='html', 'PDF'='pdf'),inputId = 'out_format', label= 'Output format'),
       fileInput('biblio', label='Bibtex file')
       
     ),
     column(
       width = 5,
-      aceEditor("rmd", mode="markdown", height = editor_height)
+      #uiOutput('ace')
+      #aceEditor("rmd", mode="markdown", height = editor_height),
+      uiOutput('aceSync')
     ),
     column(
       width = 5,
       htmlOutput('preview',
                  width = editor_width,
-                 height= editor_height)
+                 height= editor_height),
+      htmlOutput("in_db_data")
     )
   )
 ))
