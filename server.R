@@ -4,7 +4,7 @@ library(shinyAce)
 library(rethinker)
 library(shiny.collections)
 
-rdb_port = '32772'
+rdb_port = '28015'
 rdb_name = "my_db"
 rdb_table = "in_db"
 doc_id = "projectA"
