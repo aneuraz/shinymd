@@ -28,8 +28,8 @@ shinyUI(fluidPage(
     column(
       width = 5,
       #uiOutput('ace')
-      #aceEditor("rmd", mode="markdown", height = editor_height),
-      uiOutput('aceSync')
+      aceEditor("rmd", mode="markdown", height = editor_height)
+      #uiOutput('aceSync')
     ),
     column(
       width = 5,

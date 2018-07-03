@@ -1,6 +1,6 @@
 library(shiny)
 library(stringr)
-library(shinyAce)
+library(shinyAce) # devtools::install_github("aneuraz/shinyAce")
 library(rethinker)
 library(shiny.collections)
 
@@ -20,7 +20,7 @@ author: me
 
 connection <- shiny.collections::connect(port = rdb_port, db_name=rdb_name)
 
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
   
   in_db <- shiny.collections::collection(rdb_table, connection)
   
@@ -80,13 +80,15 @@ ${add_biblio}
     bb <- shiny.collections::insert(in_db, list(id = doc_id, value =input$rmd),  conflict="update")
   })
   
-  # output$in_db_data <- renderTable({
-  #   in_db$collection$value
-  # 
-  # })
+   # output$in_db_data <- renderTable({
+   #   in_db$collection$value
+   # 
+   # })
   
-  output$aceSync <- renderUI(aceEditor("rmd", mode="markdown",height= preview_height, value = in_db$collection$value))
-  
+   observeEvent(in_db$collection$value, {
+     updateAceEditor(session,"rmd", value = in_db$collection$value)
+   })
+   
 })
 
 
