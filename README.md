@@ -2,7 +2,7 @@
 
 ### R packages 
 
-- shinyAce: `install.packages("shinyAce")`
+- shinyAce: `devtools::install_github("aneuraz/shinyAce")`
 - rethinker: `install.packages('rethinker')`
 - shiny.collections: `devtools::install_github("Appsilon/shiny.collections")`
 
