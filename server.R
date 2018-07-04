@@ -9,6 +9,7 @@ config <- new.env()
 config$rdb_port = '28015'
 config$rdb_name = "my_db"
 config$rdb_table = "in_db"
+config$rdb_files = "files"
 config$preview_height <- '800px'
 config$preview_width <- '100%'
 config$base_folder <- getwd()
@@ -37,8 +38,11 @@ shinyServer(function(input, output, session) {
   observe({sessionVar$active <- input$doc_id})
   
   # get documents from db for a user 
-  in_db <- shiny.collections::collection(rdb_table, connection, 
+  in_db <- shiny.collections::collection(config$rdb_table, connection, 
                                          post_process = function(q) q$filter(list(user=user)))
+  
+  files_db <- shiny.collections::collection(config$rdb_files, connection,
+                                            post_process = function(q) q$filter(list(user=user)))
   
   # New document
   observeEvent(input$new_doc, {
@@ -54,6 +58,21 @@ shinyServer(function(input, output, session) {
     sessionVar$active <- new_id
     
   })
+  
+  observeEvent(input$biblio, {
+    new_id <- as.character(max(as.numeric(files_db$collection$id),na.rm = T)+1)
+    path <- paste0(full_tmp_folder,'/',input$biblio$name)
+    file.copy(from = input$biblio$datapath, to= path)
+    if (is.na (new_id)) new_id <- 1
+    insert(files_db, list(
+      id= new_id,
+      path = input$biblio$datapath,
+      user = user, 
+      doc_id = sessionVar$active
+    ),
+    conflict="update")
+    
+  }) 
   
   # generate md file to render 
   torender <- reactive({
@@ -74,9 +93,9 @@ ${add_biblio}
         out_format = input$out_format,
         add_biblio = add_biblio)  
     )
-    cat(header, file = tmp_rmd())
-    cat('\n\n', file = tmp_rmd(), append = T)
-    cat( in_db$collection$value[in_db$collection$id == input$doc_id], file = tmp_rmd(), append = T)
+    #cat(header, file = tmp_rmd())
+    #cat('\n\n', file = tmp_rmd(), append = T)
+    cat( in_db$collection$value[in_db$collection$id == input$doc_id], file = tmp_rmd())
     
     return(tmp_rmd())
   })
